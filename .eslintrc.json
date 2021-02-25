@@ -4,11 +4,13 @@
         "es2021": true
     },
     "extends": [
-        "airbnb-base",
-        "plugin:@typescript-eslint/recommended",
-        "prettier/@typescript-eslint",
-        "plugin:prettier/recommended"
+        "plugin:react/recommended",
+        "airbnb",
+		"plugin:@typescript-eslint/recommended"
     ],
+    "globals": {
+        "__DEV__": "readonly"
+    },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
@@ -19,8 +21,8 @@
     },
     "plugins": [
         "react",
-        "@typescript-eslint",
-        "prettier"
+		"react-hooks",
+        "@typescript-eslint"
     ],
     "rules": {
         "react-hooks/rules-of-hooks": "error",
@@ -33,28 +35,24 @@
                 ]
             }
         ],
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+            "ts": "never",
+            "tsx": "never"
+            }
+        ],
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": [
             "error"
         ],
         "react/react-in-jsx-scope": "off",
-        "import/extensions": [
-            "error",
-            "ignorePackages",
-            {
-              "ts": "never",
-              "tsx": "never"
-            }
-        ],
-        "prettier/prettier": "error",
-        "@typescript-eslint/no-unused-vars": ["error", {
-            "argsIgnorePattern": "_"
-        }],
-        "jsx-quotes": [2, "prefer-single"],
+        "semi": [2, "never"]
     },
     "settings": {
-        "import/resolver": {
+      "import/resolver": {
         "typescript": {}
-        }
+      }
     }
 }
