@@ -50,7 +50,11 @@
         "react/react-in-jsx-scope": "off",
         "react/jsx-props-no-spreading": "off",
         "react/prop-types": "off",
-        "semi": [2, "never"]
+        "semi": [2, "never"],
+        "object-curly-newline": ["error", {
+            "ImportDeclaration": "never"
+        }],
+        "arrow-body-style": "off",
     },
     "settings": {
       "import/resolver": {
