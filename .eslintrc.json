@@ -51,10 +51,11 @@
         "react/jsx-props-no-spreading": "off",
         "react/prop-types": "off",
         "semi": [2, "never"],
-        "object-curly-newline": ["error", {
-            "ImportDeclaration": "never"
-        }],
+        "object-curly-newline": "off",
         "arrow-body-style": "off",
+        "implicit-arrow-linebreak": "off",
+        "operator-linebreak": [2, "before", { "overrides": { "&&": "after" } }],
+        "no-unused-expressions": "off"
     },
     "settings": {
       "import/resolver": {
