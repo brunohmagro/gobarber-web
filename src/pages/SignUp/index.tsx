@@ -14,8 +14,7 @@ import Button from '../../components/Button'
 
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null)
-  // eslint-disable-next-line
-  const handleSubmit = useCallback(async (data: object) => {
+  const handleSubmit = useCallback(async (data: Record<string, unknown>) => {
     try {
       formRef.current?.setErrors({})
       const schema = Yup.object().shape({
