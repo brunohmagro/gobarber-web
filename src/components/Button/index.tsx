@@ -1,5 +1,6 @@
 import React, { ButtonHTMLAttributes } from 'react'
 
+import loadingGif from '../../assets/images/loading.gif'
 import { Container } from './styles'
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -8,7 +9,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const Button: React.FC<ButtonProps> = ({ children, loading, ...rest }) => (
   <Container type="button" {...rest}>
-    {loading ? 'Carregando...' : children}
+    {loading ? <img src={loadingGif} alt="Carregando..." /> : children}
   </Container>
 )
 

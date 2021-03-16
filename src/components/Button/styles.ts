@@ -16,6 +16,15 @@ export const Container = styled.button`
   &:hover {
     background: ${shade(0.2, '#ff9000')};
   }
+
+  img {
+    width: 50px;
+    height: 45px;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+  }
 `
 
 export const Teste2 = styled.div``
