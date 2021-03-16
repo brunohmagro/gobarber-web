@@ -25,6 +25,7 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "camelcase": ["error", {"allow": ["avatar_url"]}],
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
         "react/jsx-filename-extension": [
