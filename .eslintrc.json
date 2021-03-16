@@ -6,7 +6,7 @@
     "extends": [
         "plugin:react/recommended",
         "airbnb",
-		"plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended"
     ],
     "globals": {
         "__DEV__": "readonly"
@@ -21,11 +21,19 @@
     },
     "plugins": [
         "react",
-		"react-hooks",
+        "react-hooks",
         "@typescript-eslint"
     ],
     "rules": {
-        "camelcase": ["error", {"allow": ["avatar_url"]}],
+        "camelcase": [
+            "error",
+            {
+                "allow": [
+                    "avatar_url",
+                    "confirm_password"
+                ]
+            }
+        ],
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
         "react/jsx-filename-extension": [
@@ -40,8 +48,8 @@
             "error",
             "ignorePackages",
             {
-            "ts": "never",
-            "tsx": "never"
+                "ts": "never",
+                "tsx": "never"
             }
         ],
         "no-use-before-define": "off",
@@ -51,16 +59,27 @@
         "react/react-in-jsx-scope": "off",
         "react/jsx-props-no-spreading": "off",
         "react/prop-types": "off",
-        "semi": [2, "never"],
+        "semi": [
+            2,
+            "never"
+        ],
         "object-curly-newline": "off",
         "arrow-body-style": "off",
         "implicit-arrow-linebreak": "off",
-        "operator-linebreak": [2, "before", { "overrides": { "&&": "after" } }],
+        "operator-linebreak": [
+            2,
+            "before",
+            {
+                "overrides": {
+                    "&&": "after"
+                }
+            }
+        ],
         "no-unused-expressions": "off"
     },
     "settings": {
-      "import/resolver": {
-        "typescript": {}
-      }
+        "import/resolver": {
+            "typescript": {}
+        }
     }
 }
