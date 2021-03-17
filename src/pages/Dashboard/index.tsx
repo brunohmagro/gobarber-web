@@ -1,8 +1,11 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FiClock, FiPower } from 'react-icons/fi'
+import { isToday, format } from 'date-fns'
+import ptBR from 'date-fns/locale/pt-BR'
 import DayPicker, { DayModifiers } from 'react-day-picker'
 import 'react-day-picker/lib/style.css'
 
+import logoImage from '../../assets/images/logo.svg'
 import {
   Container,
   Header,
@@ -16,11 +19,31 @@ import {
   Calendar,
 } from './styles'
 
-import logoImage from '../../assets/images/logo.svg'
 import { useAuth } from '../../hooks/auth'
+import api from '../../services/api'
+
+interface MonthAvailability {
+  day: number
+  available: boolean
+}
+
+interface Appointment {
+  id: string
+  date: string
+  user: {
+    name: string
+    avatar_url: string
+  }
+}
 
 const Dashboard: React.FC = () => {
+  const { signOut, user } = useAuth()
   const [selectedDate, setSelectedDate] = useState(new Date())
+  const [currenttMonth, setCurrentMonth] = useState(new Date())
+  const [monthAvailability, setMonthAvailability] = useState<
+    MonthAvailability[]
+  >([])
+  const [appointments, setApporintments] = useState<Appointment[]>([])
 
   const handleDateChange = useCallback((day, modifiers: DayModifiers) => {
     if (modifiers.available) {
@@ -28,7 +51,63 @@ const Dashboard: React.FC = () => {
     }
   }, [])
 
-  const { signOut, user } = useAuth()
+  const handleMonthChange = useCallback((month: Date) => {
+    setCurrentMonth(month)
+  }, [])
+
+  useEffect(() => {
+    api
+      .get(`/providers/${user.id}/disponibilidade-mes`, {
+        params: {
+          year: currenttMonth.getUTCFullYear(),
+          month: currenttMonth.getMonth() + 1,
+        },
+      })
+      .then((response) => {
+        setMonthAvailability(response.data)
+      })
+  }, [currenttMonth, user.id])
+
+  useEffect(() => {
+    api
+      .get('/appointments/me', {
+        params: {
+          year: selectedDate.getFullYear(),
+          month: selectedDate.getMonth() + 1,
+          day: selectedDate.getDate(),
+        },
+      })
+      .then((response) => {
+        setApporintments(response.data)
+        console.log(response.data)
+      })
+  }, [selectedDate])
+
+  const disableDays = useMemo(() => {
+    const dates = monthAvailability
+      .filter((monthDay) => monthDay.available === false)
+      .map((monthDay) => {
+        const year = currenttMonth.getFullYear()
+        const month = currenttMonth.getMonth()
+        return new Date(year, month, monthDay.day)
+      })
+
+    return dates
+  }, [currenttMonth, monthAvailability])
+
+  const selectedDateAsText = useMemo(() => {
+    return format(selectedDate, "'Dia' dd 'de' MMMM", {
+      locale: ptBR,
+    })
+  }, [selectedDate])
+
+  const selectedWeekDate = useMemo(() => {
+    const week = format(selectedDate, 'cccc', {
+      locale: ptBR,
+    })
+
+    return week.charAt(0).toUpperCase() + week.slice(1)
+  }, [selectedDate])
 
   return (
     <Container>
@@ -54,9 +133,9 @@ const Dashboard: React.FC = () => {
         <Schedule>
           <h1>Horários agendados</h1>
           <p>
-            <span>Hoje</span>
-            <span>Dia 06</span>
-            <span>Segunda-feira</span>
+            {isToday(selectedDate) && <span>Hoje</span>}
+            <span>{selectedDateAsText}</span>
+            <span>{selectedWeekDate}</span>
           </p>
 
           <NextAppointment>
@@ -142,12 +221,13 @@ const Dashboard: React.FC = () => {
         <Calendar>
           <DayPicker
             fromMonth={new Date()}
-            disabledDays={[{ daysOfWeek: [0] }]}
+            disabledDays={[{ daysOfWeek: [0] }, ...disableDays]}
             modifiers={{
               available: { daysOfWeek: [1, 2, 3, 4, 5, 6] },
             }}
             selectedDays={selectedDate}
             onDayClick={handleDateChange}
+            onMonthChange={handleMonthChange}
             weekdaysShort={['D', 'S', 'T', 'Q', 'Q', 'S', 'S']}
             months={[
               'Janeiro',
