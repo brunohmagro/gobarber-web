@@ -9,6 +9,7 @@ import ForgotPassword from '../pages/ForgotPassword'
 import ResetPassword from '../pages/ResetPassword'
 
 import Dashboard from '../pages/Dashboard'
+import Profile from '../pages/Profile'
 
 const Routes: React.FC = () => (
   <Switch>
@@ -18,6 +19,7 @@ const Routes: React.FC = () => (
     <Route path="/resetar-senha" component={ResetPassword} />
 
     <Route path="/dashboard" exact component={Dashboard} isPrivate />
+    <Route path="/perfil" exact component={Profile} isPrivate />
   </Switch>
 )
 
