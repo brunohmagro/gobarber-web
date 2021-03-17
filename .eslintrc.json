@@ -25,6 +25,7 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "function-paren-newline": "off",
         "import/no-duplicates": "off",
         "camelcase": [
             "error",
