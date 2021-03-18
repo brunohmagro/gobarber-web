@@ -18,7 +18,9 @@ import Button from '../../components/Button'
 interface ProfileFormData {
   name: string
   email: string
+  current_password: string
   password: string
+  confirm_password: string
 }
 
 const Profile: React.FC = () => {
@@ -36,30 +38,58 @@ const Profile: React.FC = () => {
           email: Yup.string()
             .required('O campo e-mail é obrigatório')
             .email('Digite um e-mail válido'),
-          password: Yup.string().min(
-            6,
+          current_password: Yup.string().test(
+            'empty-or-6-characters-check',
             'A senha deve ter no mínimo 6 caracteres',
+            (current_password) =>
+              !current_password || current_password.length >= 6,
           ),
-          confirm_password: Yup.string()
-            .oneOf(
-              [Yup.ref('password'), null],
-              'As senhas informadas não conferem',
-            )
-            .required('A confirmação da senha é orbigatória'),
+          password: Yup.string().when('current_password', {
+            is: (current_password: string) => current_password.length >= 6,
+            then: Yup.string()
+              .required('Campo obrigatório')
+              .min(6, 'A nova senha deve ter ao menos 6 caracteres'),
+          }),
+          confirm_password: Yup.string().oneOf(
+            [Yup.ref('password'), null],
+            'As senhas informadas não conferem',
+          ),
         })
 
         await schema.validate(data, {
           abortEarly: false,
         })
 
-        await api.post('/users', data)
+        const {
+          name,
+          email,
+          current_password,
+          password,
+          confirm_password,
+        } = data
 
-        history.push('/')
+        const formData = {
+          name,
+          email,
+          ...(current_password
+            ? {
+                oldPassword: current_password,
+                password,
+                confirmPassword: confirm_password,
+              }
+            : {}),
+        }
+
+        const response = await api.put('/profile', formData)
+
+        updateUser(response.data)
+
+        history.push('/dashboard')
 
         addToast({
           type: 'success',
           title: 'Obaa, deu tudo certo!',
-          description: 'Você já pode fazer seu logon no GoBarber!',
+          description: 'Seu perfil foi atualizado com sucesso!',
         })
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -70,8 +100,9 @@ const Profile: React.FC = () => {
 
         addToast({
           type: 'error',
-          title: 'Opss...Erro no cadastro',
-          description: 'Ocorreu um erro ao efetuar o cadastro, tente novamente',
+          title: 'Opss...Erro na atualização',
+          description:
+            'Ocorreu um erro ao atualizar seu perfil, tente novamente',
         })
       }
     },
