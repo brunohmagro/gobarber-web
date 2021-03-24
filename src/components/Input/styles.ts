@@ -42,6 +42,7 @@ export const Container = styled.div<ContainerProps>`
   ${(props) =>
     props.isFilled &&
     css`
+      color: #ff9000 !important;
       svg {
         color: #ff9000 !important;
       }
